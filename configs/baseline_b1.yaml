@@ -1,0 +1,6 @@
+# B1: B0 stage 1 replaced by fixed-weight motion/appearance fusion  C = (1-lam)(1-IoU) + lam*d
+_base_: default.yaml
+name: b1
+method: b1
+tracker:
+  update_mode: fixed

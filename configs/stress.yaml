@@ -1,0 +1,13 @@
+# Stress protocols S1 (density/occlusion bins, bootstrap CIs) and S2 (disappearance injection).
+_base_: rca.yaml
+name: stress
+stress:
+  window: 100
+  n_bins: 4
+  n_boot: 2000
+  methods: [b0, b1, b2, b3, rca]
+  reference: b1
+  gap_lengths: [5, 15, 30, 60]
+  n_gaps: 8
+  gap_seeds: [0, 1, 2]
+  tau_sweep: [0.0, 0.05, 0.1, 0.2, 0.3, 0.5]

@@ -1,0 +1,4 @@
+# B0: ByteTrack-style two-stage association, IoU only (no appearance).
+_base_: default.yaml
+name: b0
+method: b0

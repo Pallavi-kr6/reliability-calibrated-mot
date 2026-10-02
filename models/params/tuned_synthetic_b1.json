@@ -1,0 +1,71 @@
+{
+  "method": "b1",
+  "dataset": "synthetic",
+  "split": "train",
+  "metric": "HOTA",
+  "best_score": 68.76171567133774,
+  "overrides": {
+    "fusion": {
+      "fixed_lambda": 0.35,
+      "app_gate": 0.4
+    }
+  },
+  "table": [
+    {
+      "fusion.fixed_lambda": 0.2,
+      "fusion.app_gate": 0.4,
+      "HOTA": 68.5301957557746,
+      "IDF1": 78.82727686407073,
+      "IDSW": 40
+    },
+    {
+      "fusion.fixed_lambda": 0.2,
+      "fusion.app_gate": 0.6,
+      "HOTA": 67.00443450604567,
+      "IDF1": 77.12316296007283,
+      "IDSW": 37
+    },
+    {
+      "fusion.fixed_lambda": 0.35,
+      "fusion.app_gate": 0.4,
+      "HOTA": 68.76171567133774,
+      "IDF1": 79.71165086374855,
+      "IDSW": 43
+    },
+    {
+      "fusion.fixed_lambda": 0.35,
+      "fusion.app_gate": 0.6,
+      "HOTA": 68.11543375305256,
+      "IDF1": 79.58495460440986,
+      "IDSW": 40
+    },
+    {
+      "fusion.fixed_lambda": 0.5,
+      "fusion.app_gate": 0.4,
+      "HOTA": 65.28548621062944,
+      "IDF1": 74.84558871334764,
+      "IDSW": 61
+    },
+    {
+      "fusion.fixed_lambda": 0.5,
+      "fusion.app_gate": 0.6,
+      "HOTA": 62.28501549607335,
+      "IDF1": 71.28764278296988,
+      "IDSW": 75
+    },
+    {
+      "fusion.fixed_lambda": 0.65,
+      "fusion.app_gate": 0.4,
+      "HOTA": 65.35513844664487,
+      "IDF1": 74.89760093622002,
+      "IDSW": 58
+    },
+    {
+      "fusion.fixed_lambda": 0.65,
+      "fusion.app_gate": 0.6,
+      "HOTA": 60.00500876022834,
+      "IDF1": 67.93163948274741,
+      "IDSW": 100
+    }
+  ]
+}

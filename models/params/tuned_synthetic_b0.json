@@ -1,0 +1,32 @@
+{
+  "method": "b0",
+  "dataset": "synthetic",
+  "split": "train",
+  "metric": "HOTA",
+  "best_score": 67.21298559028772,
+  "overrides": {
+    "fusion": {
+      "b0_min_iou": 0.1
+    }
+  },
+  "table": [
+    {
+      "fusion.b0_min_iou": 0.1,
+      "HOTA": 67.21298559028772,
+      "IDF1": 78.20379516506368,
+      "IDSW": 49
+    },
+    {
+      "fusion.b0_min_iou": 0.2,
+      "HOTA": 66.41313914421208,
+      "IDF1": 76.05652145601354,
+      "IDSW": 40
+    },
+    {
+      "fusion.b0_min_iou": 0.3,
+      "HOTA": 67.11275432408388,
+      "IDF1": 77.43826959411037,
+      "IDSW": 37
+    }
+  ]
+}

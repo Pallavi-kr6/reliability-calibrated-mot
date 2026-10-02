@@ -1,0 +1,7 @@
+# B2: B1 with lam scaled by detection confidence and a confidence-weighted EMA update (Deep OC-SORT-style heuristic,
+# re-implemented here; not the official code).
+_base_: default.yaml
+name: b2
+method: b2
+tracker:
+  update_mode: score

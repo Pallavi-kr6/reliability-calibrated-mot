@@ -1,0 +1,56 @@
+{
+  "method": "rca",
+  "dataset": "synthetic",
+  "split": "train",
+  "metric": "HOTA",
+  "best_score": 66.66040653287641,
+  "overrides": {
+    "rca": {
+      "accept_thresh": 0.1
+    }
+  },
+  "table": [
+    {
+      "rca.accept_thresh": 0.0,
+      "HOTA": 60.31922472456252,
+      "IDF1": 69.22227275680592,
+      "IDSW": 124
+    },
+    {
+      "rca.accept_thresh": 0.1,
+      "HOTA": 66.66040653287641,
+      "IDF1": 74.97866193946557,
+      "IDSW": 50
+    },
+    {
+      "rca.accept_thresh": 0.2,
+      "HOTA": 65.02416714411287,
+      "IDF1": 72.39473684210526,
+      "IDSW": 60
+    },
+    {
+      "rca.accept_thresh": 0.3,
+      "HOTA": 64.44021403633451,
+      "IDF1": 71.43422615120728,
+      "IDSW": 72
+    },
+    {
+      "rca.accept_thresh": 0.4,
+      "HOTA": 62.49339517472683,
+      "IDF1": 68.33785303260798,
+      "IDSW": 87
+    },
+    {
+      "rca.accept_thresh": 0.5,
+      "HOTA": 61.74135033413404,
+      "IDF1": 67.42183359830419,
+      "IDSW": 95
+    },
+    {
+      "rca.accept_thresh": 0.6,
+      "HOTA": 61.284887624780694,
+      "IDF1": 66.37925316707567,
+      "IDSW": 102
+    }
+  ]
+}

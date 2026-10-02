@@ -1,0 +1,9 @@
+# MOT20 (official train sequences, half split). Dense crowds (~127 pedestrians/frame on average).
+data:
+  dataset: mot20
+  det_source: public
+  embedder: osnet
+  embedder_model: osnet_x0_25
+  embedder_weights: weights/osnet_x0_25_msmt17.pth
+rca:
+  model_path: models/params/rca_mot20.json

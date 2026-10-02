@@ -1,0 +1,24 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+.env
+*.egg-info/
+# data and caches are never committed
+data/MOT17/
+data/MOT20/
+data/dancetrack/
+data/synthetic/
+data/cache/
+data/*.zip
+weights/*.pth
+weights/*.pt
+# regenerated results (the small demo outputs under results/demo are tracked on purpose)
+results/runs/
+results/*.csv
+results/*.md
+results/figures/
+results/failures/
+third_party/**/__pycache__/

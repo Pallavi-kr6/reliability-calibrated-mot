@@ -1,0 +1,3 @@
+# Calibration experiment: raw logit vs Platt-calibrated posterior on held-out pairs (ECE / Brier / NLL).
+_base_: rca.yaml
+name: calibration

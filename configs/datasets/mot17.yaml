@@ -1,0 +1,9 @@
+# MOT17 (official train sequences, first half = fit/calibration, second half = evaluation). Public detections.
+data:
+  dataset: mot17
+  det_source: public
+  embedder: osnet            # needs torchreid + weights; use `--embedder colorhist` for a weights-free CPU run
+  embedder_model: osnet_x0_25
+  embedder_weights: weights/osnet_x0_25_msmt17.pth
+rca:
+  model_path: models/params/rca_mot17.json

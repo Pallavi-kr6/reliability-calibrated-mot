@@ -1,0 +1,278 @@
+{
+  "name": "rca_full",
+  "method": "rca",
+  "dataset": "synthetic",
+  "split": "val",
+  "det_source": "public",
+  "embedder": "colorhist",
+  "backend": "own",
+  "combined": {
+    "HOTA": 59.738932340271035,
+    "DetA": 63.73487595952162,
+    "AssA": 56.21175936670454,
+    "LocA": 87.72381064000919,
+    "IDF1": 68.14473217452998,
+    "IDP": 77.55349212757368,
+    "IDR": 60.771907624169565,
+    "MOTA": 68.07972160708637,
+    "IDSW": 73,
+    "TP": 6980,
+    "FN": 2503,
+    "FP": 451,
+    "num_gt": 9483,
+    "num_pred": 7431
+  },
+  "per_sequence": {
+    "syn_story": {
+      "HOTA": 62.85084497641994,
+      "DetA": 69.9786457974878,
+      "AssA": 56.58144931731014,
+      "LocA": 88.91791332563201,
+      "IDF1": 68.77912395153774,
+      "IDP": 75.61475409836065,
+      "IDR": 63.07692307692308,
+      "MOTA": 75.38461538461539,
+      "IDSW": 3,
+      "TP": 466,
+      "FN": 119,
+      "FP": 22,
+      "num_gt": 585,
+      "num_pred": 488
+    },
+    "syn_val_06_distinct": {
+      "HOTA": 73.28388713558363,
+      "DetA": 70.3137828029456,
+      "AssA": 76.42621404930568,
+      "LocA": 89.96900020248056,
+      "IDF1": 86.27450980392157,
+      "IDP": 96.28647214854111,
+      "IDR": 78.14854682454252,
+      "MOTA": 75.67276641550053,
+      "IDSW": 1,
+      "TP": 729,
+      "FN": 200,
+      "FP": 25,
+      "num_gt": 929,
+      "num_pred": 754
+    },
+    "syn_val_12_mixed": {
+      "HOTA": 67.05662778173898,
+      "DetA": 71.09153587870932,
+      "AssA": 63.38469883782366,
+      "LocA": 89.31475226027025,
+      "IDF1": 75.04737839545167,
+      "IDP": 82.55733148019458,
+      "IDR": 68.78980891719745,
+      "MOTA": 76.54892877822815,
+      "IDSW": 11,
+      "TP": 1386,
+      "FN": 341,
+      "FP": 53,
+      "num_gt": 1727,
+      "num_pred": 1439
+    },
+    "syn_val_18_similar": {
+      "HOTA": 60.365757186543675,
+      "DetA": 67.23008190135161,
+      "AssA": 54.42295884281512,
+      "LocA": 87.74080634334543,
+      "IDF1": 67.06710853355426,
+      "IDP": 73.72495446265938,
+      "IDR": 61.51215805471124,
+      "MOTA": 71.9224924012158,
+      "IDSW": 21,
+      "TP": 2055,
+      "FN": 577,
+      "FP": 141,
+      "num_gt": 2632,
+      "num_pred": 2196
+    },
+    "syn_val_24_uniform": {
+      "HOTA": 50.68855996039188,
+      "DetA": 55.23693139069289,
+      "AssA": 46.748410236611925,
+      "LocA": 85.86582629818457,
+      "IDF1": 60.38286826735886,
+      "IDP": 72.86609240407205,
+      "IDR": 51.551246537396125,
+      "MOTA": 58.08864265927978,
+      "IDSW": 37,
+      "TP": 2344,
+      "FN": 1266,
+      "FP": 210,
+      "num_gt": 3610,
+      "num_pred": 2554
+    }
+  },
+  "timing": {
+    "tracker_fps": 612.0074308539098,
+    "mean_ms": 1.6339670886099202,
+    "p50_ms": 1.546857500045462,
+    "p95_ms": 2.790931150030928,
+    "mean_dets": 10.19113924050633,
+    "frames": 790
+  },
+  "config": {
+    "name": "rca_full",
+    "method": "rca",
+    "seed": 0,
+    "device": "auto",
+    "results_dir": "results/demo",
+    "cache_dir": "data/cache",
+    "data": {
+      "root": "data",
+      "dataset": "synthetic",
+      "mot17_detector": "FRCNN",
+      "det_source": "public",
+      "det_file": "{seq_dir}/det/det.txt",
+      "det_min_score": 0.1,
+      "embedder": "colorhist",
+      "embedder_weights": null,
+      "embedder_model": "osnet_x0_25",
+      "eval_split": "val",
+      "oracle": {
+        "jitter_std": 0.04,
+        "miss_prob": 0.05,
+        "min_vis": 0.1,
+        "score_mean": 0.9,
+        "score_std": 0.05
+      }
+    },
+    "tracker": {
+      "high_thresh": 0.5,
+      "low_thresh": 0.1,
+      "new_track_thresh": 0.6,
+      "max_age": 30,
+      "min_hits": 2,
+      "ema_alpha": 0.9,
+      "update_mode": "posterior",
+      "tentative_min_iou": 0.3,
+      "stage2_min_iou": 0.5,
+      "lost_vel_decay": 0.9,
+      "occ_track_max_tsu": 5
+    },
+    "gate": {
+      "iou": 0.0,
+      "ctr": 0.75,
+      "growth": 0.1,
+      "ctr_max": 2.5
+    },
+    "fusion": {
+      "b0_min_iou": 0.2,
+      "fixed_lambda": 0.5,
+      "fused_cost_thresh": 0.75,
+      "app_gate": 0.6,
+      "ioa_gate": 0.5
+    },
+    "rca": {
+      "model_path": "models/params/rca_synthetic.json",
+      "auto_train": true,
+      "accept_thresh": 0.1,
+      "calibrate": true,
+      "margin_clip": 0.3,
+      "l2": 0.001,
+      "use_occ": true,
+      "use_margin": true,
+      "use_score": true,
+      "fit_block": 40
+    },
+    "eval": {
+      "backend": "own",
+      "iou_thr": 0.5
+    },
+    "stress": {
+      "window": 40,
+      "n_bins": 4,
+      "n_boot": 2000,
+      "methods": [
+        "b0",
+        "b1",
+        "b2",
+        "b3",
+        "rca"
+      ],
+      "reference": "b1",
+      "gap_lengths": [
+        5,
+        15,
+        30,
+        60
+      ],
+      "n_gaps": 8,
+      "gap_seeds": [
+        0,
+        1,
+        2
+      ],
+      "tau_sweep": [
+        0.0,
+        0.05,
+        0.1,
+        0.2,
+        0.3,
+        0.5
+      ]
+    },
+    "tune": {
+      "metric": "HOTA",
+      "split": "train",
+      "grids": {
+        "b0": {
+          "fusion.b0_min_iou": [
+            0.1,
+            0.2,
+            0.3
+          ]
+        },
+        "b1": {
+          "fusion.fixed_lambda": [
+            0.2,
+            0.35,
+            0.5,
+            0.65
+          ],
+          "fusion.app_gate": [
+            0.4,
+            0.6
+          ]
+        },
+        "b2": {
+          "fusion.fixed_lambda": [
+            0.2,
+            0.35,
+            0.5,
+            0.65
+          ],
+          "fusion.app_gate": [
+            0.4,
+            0.6
+          ]
+        },
+        "b3": {
+          "fusion.fixed_lambda": [
+            0.2,
+            0.35,
+            0.5,
+            0.65
+          ],
+          "fusion.ioa_gate": [
+            0.3,
+            0.5,
+            0.7
+          ]
+        },
+        "rca": {
+          "rca.accept_thresh": [
+            0.0,
+            0.1,
+            0.2,
+            0.3,
+            0.4,
+            0.5,
+            0.6
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+# Exact versions this project was built and tested with (Python 3.12, Linux, CPU). Use if you want a bit-identical stack:
+#   pip install -r requirements.txt -c constraints-tested.txt
+numpy==2.4.4
+scipy==1.17.1
+opencv-python-headless==4.13.0.92
+PyYAML==6.0.3
+pandas==3.0.2
+matplotlib==3.10.8
+Pillow==12.1.1

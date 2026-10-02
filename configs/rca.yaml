@@ -1,0 +1,8 @@
+# RCA (proposed): calibrated, reliability-conditioned match posterior used as Hungarian cost and accept gate.
+_base_: default.yaml
+name: rca
+method: rca
+tracker:
+  update_mode: posterior
+rca:
+  model_path: models/params/rca.json

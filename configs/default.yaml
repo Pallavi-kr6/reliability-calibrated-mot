@@ -1,0 +1,89 @@
+# Default configuration. Every experiment config inherits from this file (via `_base_` / implicit merge).
+# All relative paths are resolved against the project root.
+name: default
+method: b0                 # b0 | b1 | b2 | b3 | rca
+seed: 0
+device: auto               # auto | cpu | cuda
+results_dir: results       # synthetic demo automatically uses results/demo
+cache_dir: data/cache
+
+data:
+  root: data
+  dataset: mot17           # mot17 | mot20 | dancetrack | synthetic  (override with --dataset)
+  mot17_detector: FRCNN    # which MOT17 sequence variant to use
+  det_source: public       # public (det/det.txt) | oracle (noisy GT boxes, "D0") | file (see det_file)
+  det_file: "{seq_dir}/det/det.txt"
+  det_min_score: 0.1
+  embedder: colorhist      # colorhist | resnet18 | osnet
+  embedder_weights: null   # path for osnet weights (e.g. weights/osnet_x0_25_msmt17.pth)
+  embedder_model: osnet_x0_25
+  eval_split: val
+  oracle:                  # noise model of the oracle ("D0") detections
+    jitter_std: 0.04       # box jitter as a fraction of width/height
+    miss_prob: 0.05
+    min_vis: 0.1
+    score_mean: 0.9
+    score_std: 0.05
+
+tracker:
+  high_thresh: 0.5         # stage-1 detections
+  low_thresh: 0.1          # stage-2 detections
+  new_track_thresh: 0.6
+  max_age: 30              # frames a lost track is kept
+  min_hits: 2
+  ema_alpha: 0.9           # EMA appearance prototype
+  update_mode: fixed       # fixed | score | posterior | gated
+  tentative_min_iou: 0.3
+  stage2_min_iou: 0.5
+  lost_vel_decay: 0.9
+  occ_track_max_tsu: 5
+
+gate:                      # loose candidate gate shared by all methods
+  iou: 0.0
+  ctr: 0.75
+  growth: 0.1
+  ctr_max: 2.5
+
+fusion:                    # baselines B0-B3
+  b0_min_iou: 0.2
+  fixed_lambda: 0.5
+  fused_cost_thresh: 0.7
+  app_gate: 0.5
+  ioa_gate: 0.5            # B3 hard overlap gate / "gated" update mode
+
+rca:
+  model_path: models/params/rca.json
+  auto_train: true         # train automatically if the parameter file is missing
+  accept_thresh: 0.5       # posterior accept/reject gate (0 disables the gate)
+  calibrate: true
+  margin_clip: 0.3
+  l2: 0.001
+  use_occ: true
+  use_margin: true
+  use_score: true
+  fit_block: 100           # frames per block; even blocks -> fit, odd blocks -> Platt calibration
+
+eval:
+  backend: own             # own | trackeval
+  iou_thr: 0.5
+
+stress:
+  window: 100
+  n_bins: 4
+  n_boot: 2000
+  methods: [b0, b1, b2, b3, rca]
+  reference: b1            # paired comparison RCA - reference
+  gap_lengths: [5, 15, 30, 60]
+  n_gaps: 8
+  gap_seeds: [0, 1, 2]
+  tau_sweep: [0.0, 0.05, 0.1, 0.2, 0.3, 0.5]   # RCA operating curve (S2)
+
+tune:                      # hyper-parameter selection on the TRAIN split (never on the evaluation split)
+  metric: HOTA
+  split: train
+  grids:
+    b0:  {fusion.b0_min_iou: [0.1, 0.2, 0.3]}
+    b1:  {fusion.fixed_lambda: [0.2, 0.35, 0.5, 0.65], fusion.app_gate: [0.4, 0.6]}
+    b2:  {fusion.fixed_lambda: [0.2, 0.35, 0.5, 0.65], fusion.app_gate: [0.4, 0.6]}
+    b3:  {fusion.fixed_lambda: [0.2, 0.35, 0.5, 0.65], fusion.ioa_gate: [0.3, 0.5, 0.7]}
+    rca: {rca.accept_thresh: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6]}

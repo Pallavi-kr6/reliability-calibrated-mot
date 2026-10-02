@@ -1,0 +1,7 @@
+# B3: B1 with hard overlap (IoA) gating: appearance cost and appearance update disabled for heavily overlapped
+# pairs (FC-Track-style, re-implemented here; not the official code).
+_base_: default.yaml
+name: b3
+method: b3
+tracker:
+  update_mode: gated

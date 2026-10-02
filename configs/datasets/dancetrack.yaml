@@ -1,0 +1,10 @@
+# DanceTrack (uniform appearance, diverse motion). It ships NO detections: use det_source=oracle (noisy GT boxes, "D0")
+# or det_source=file with MOT-format detections produced by a detector of your choice.
+data:
+  dataset: dancetrack
+  det_source: oracle
+  embedder: osnet
+  embedder_model: osnet_x0_25
+  embedder_weights: weights/osnet_x0_25_msmt17.pth
+rca:
+  model_path: models/params/rca_dancetrack.json

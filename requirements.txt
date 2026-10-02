@@ -1,0 +1,14 @@
+# Core (CPU-only, everything needed for tracking, evaluation, stress tests, demo, figures)
+numpy>=1.24,<3
+scipy>=1.10,<2
+opencv-python-headless>=4.8,<5
+PyYAML>=6.0,<7
+pandas>=2.0,<4
+matplotlib>=3.7,<4
+Pillow>=10.0
+tabulate>=0.9
+
+# OPTIONAL appearance backends (the default `colorhist` backend needs none of these):
+#   CPU:   pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+#   CUDA:  pip install torch torchvision          (pick the wheel matching your driver: https://pytorch.org/get-started/locally/)
+#   OSNet: pip install git+https://github.com/KaiyangZhou/deep-person-reid.git   (+ downloaded ReID weights, see README)
