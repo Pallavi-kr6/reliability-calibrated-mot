@@ -1,0 +1,71 @@
+{
+  "method": "b2",
+  "dataset": "mot17",
+  "split": "train",
+  "metric": "HOTA",
+  "best_score": 50.378259105830615,
+  "overrides": {
+    "fusion": {
+      "fixed_lambda": 0.2,
+      "app_gate": 0.4
+    }
+  },
+  "table": [
+    {
+      "fusion.fixed_lambda": 0.2,
+      "fusion.app_gate": 0.4,
+      "HOTA": 50.378259105830615,
+      "IDF1": 57.06630944407234,
+      "IDSW": 370
+    },
+    {
+      "fusion.fixed_lambda": 0.2,
+      "fusion.app_gate": 0.6,
+      "HOTA": 50.22284924988746,
+      "IDF1": 56.906739837310546,
+      "IDSW": 367
+    },
+    {
+      "fusion.fixed_lambda": 0.35,
+      "fusion.app_gate": 0.4,
+      "HOTA": 49.16322055217706,
+      "IDF1": 55.63651672657793,
+      "IDSW": 339
+    },
+    {
+      "fusion.fixed_lambda": 0.35,
+      "fusion.app_gate": 0.6,
+      "HOTA": 49.11713508174914,
+      "IDF1": 55.478690683042124,
+      "IDSW": 348
+    },
+    {
+      "fusion.fixed_lambda": 0.5,
+      "fusion.app_gate": 0.4,
+      "HOTA": 45.84400398314401,
+      "IDF1": 51.748824772501834,
+      "IDSW": 377
+    },
+    {
+      "fusion.fixed_lambda": 0.5,
+      "fusion.app_gate": 0.6,
+      "HOTA": 45.42418253624816,
+      "IDF1": 51.3438049138089,
+      "IDSW": 377
+    },
+    {
+      "fusion.fixed_lambda": 0.65,
+      "fusion.app_gate": 0.4,
+      "HOTA": 46.26717274785071,
+      "IDF1": 51.87811897088781,
+      "IDSW": 354
+    },
+    {
+      "fusion.fixed_lambda": 0.65,
+      "fusion.app_gate": 0.6,
+      "HOTA": 45.07316408135561,
+      "IDF1": 49.785028501233796,
+      "IDSW": 375
+    }
+  ]
+}

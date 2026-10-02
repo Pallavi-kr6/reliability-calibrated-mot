@@ -1,7 +1,7 @@
 | dataset | method | HOTA | DetA | AssA | IDF1 | MOTA | IDSW | tracker FPS | det source | embedder |
 |---|---|---|---|---|---|---|---|---|---|---|
-| synthetic | b0 | 57.1 | 61.5 | 53.3 | 65.9 | 66.4 | 120 | 644.3 | public | colorhist |
-| synthetic | b1 | 55.0 | 61.1 | 49.7 | 62.1 | 65.3 | 129 | 599.4 | public | colorhist |
-| synthetic | b2 | 60.4 | 62.2 | 59.0 | 69.6 | 67.8 | 80 | 635.9 | public | colorhist |
-| synthetic | b3 | 58.8 | 62.3 | 55.7 | 68.1 | 67.1 | 96 | 665.5 | public | colorhist |
-| synthetic | rca | 59.7 | 63.7 | 56.2 | 68.1 | 68.1 | 73 | 655.8 | public | colorhist |
+| synthetic | b0 | 65.1 | 66.1 | 64.3 | 75.6 | 73.2 | 22 | 855.0 | public | colorhist |
+| synthetic | b1 | 67.7 | 65.1 | 70.7 | 79.1 | 73.0 | 18 | 804.4 | public | colorhist |
+| synthetic | b2 | 66.1 | 65.6 | 66.9 | 77.6 | 73.3 | 23 | 635.3 | public | colorhist |
+| synthetic | b3 | 66.0 | 66.2 | 66.0 | 77.7 | 74.1 | 24 | 758.6 | public | colorhist |
+| synthetic | rca | 64.8 | 65.8 | 64.2 | 72.8 | 73.0 | 29 | 811.6 | public | colorhist |

@@ -1,0 +1,32 @@
+{
+  "method": "b0",
+  "dataset": "mot17",
+  "split": "train",
+  "metric": "HOTA",
+  "best_score": 50.53690308892501,
+  "overrides": {
+    "fusion": {
+      "b0_min_iou": 0.3
+    }
+  },
+  "table": [
+    {
+      "fusion.b0_min_iou": 0.1,
+      "HOTA": 49.53196849914807,
+      "IDF1": 56.03142231286351,
+      "IDSW": 362
+    },
+    {
+      "fusion.b0_min_iou": 0.2,
+      "HOTA": 50.29242160978127,
+      "IDF1": 56.63311590133483,
+      "IDSW": 386
+    },
+    {
+      "fusion.b0_min_iou": 0.3,
+      "HOTA": 50.53690308892501,
+      "IDF1": 56.78208884228279,
+      "IDSW": 436
+    }
+  ]
+}

@@ -3,69 +3,69 @@
   "dataset": "synthetic",
   "split": "train",
   "metric": "HOTA",
-  "best_score": 67.98241146601868,
+  "best_score": 69.97781306737782,
   "overrides": {
     "fusion": {
       "fixed_lambda": 0.2,
-      "app_gate": 0.4
+      "app_gate": 0.6
     }
   },
   "table": [
     {
       "fusion.fixed_lambda": 0.2,
       "fusion.app_gate": 0.4,
-      "HOTA": 67.98241146601868,
-      "IDF1": 77.5661927742272,
-      "IDSW": 38
+      "HOTA": 69.96812026139804,
+      "IDF1": 80.7298175456136,
+      "IDSW": 6
     },
     {
       "fusion.fixed_lambda": 0.2,
       "fusion.app_gate": 0.6,
-      "HOTA": 65.9731070683019,
-      "IDF1": 75.26391242017463,
-      "IDSW": 43
+      "HOTA": 69.97781306737782,
+      "IDF1": 81.09862671660424,
+      "IDSW": 6
     },
     {
       "fusion.fixed_lambda": 0.35,
       "fusion.app_gate": 0.4,
-      "HOTA": 67.65082918041504,
-      "IDF1": 77.75169535732915,
-      "IDSW": 41
+      "HOTA": 67.06090019916792,
+      "IDF1": 76.19285535848114,
+      "IDSW": 7
     },
     {
       "fusion.fixed_lambda": 0.35,
       "fusion.app_gate": 0.6,
-      "HOTA": 66.06548179773985,
-      "IDF1": 76.35297948550961,
-      "IDSW": 43
+      "HOTA": 66.95953285747386,
+      "IDF1": 76.00997506234414,
+      "IDSW": 8
     },
     {
       "fusion.fixed_lambda": 0.5,
       "fusion.app_gate": 0.4,
-      "HOTA": 66.90931291916459,
-      "IDF1": 77.23301603859694,
-      "IDSW": 61
+      "HOTA": 67.12707203135997,
+      "IDF1": 76.8039950062422,
+      "IDSW": 10
     },
     {
       "fusion.fixed_lambda": 0.5,
       "fusion.app_gate": 0.6,
-      "HOTA": 66.34588294107368,
-      "IDF1": 76.73692427790789,
-      "IDSW": 62
+      "HOTA": 69.16371012816212,
+      "IDF1": 80.11958146487295,
+      "IDSW": 4
     },
     {
       "fusion.fixed_lambda": 0.65,
       "fusion.app_gate": 0.4,
-      "HOTA": 67.07881959740645,
-      "IDF1": 76.68859506285416,
-      "IDSW": 55
+      "HOTA": 67.19234310889468,
+      "IDF1": 76.6541822721598,
+      "IDSW": 9
     },
     {
       "fusion.fixed_lambda": 0.65,
       "fusion.app_gate": 0.6,
-      "HOTA": 65.80659071193524,
-      "IDF1": 76.64779751447719,
-      "IDSW": 74
+      "HOTA": 68.06643334696433,
+      "IDF1": 77.72795216741405,
+      "IDSW": 6
     }
   ]
 }

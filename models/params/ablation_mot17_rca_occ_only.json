@@ -1,0 +1,49 @@
+{
+  "param_names": [
+    "b0",
+    "b_iou",
+    "b_ctr",
+    "b_tsu",
+    "b_iou_tsu",
+    "g0",
+    "g_occ",
+    "g_margin",
+    "g_score",
+    "d0"
+  ],
+  "params": [
+    -2.463652028909211,
+    6.383848402116327,
+    -2.916057919724746,
+    -0.7082179830177812,
+    -1.0080110873003996,
+    1.6470684558181148,
+    0.5833713822355417,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "platt_a": 1.469867803679567,
+  "platt_b": 0.025149350248129237,
+  "switches": {
+    "use_occ": true,
+    "use_margin": false,
+    "use_score": false
+  },
+  "meta": {
+    "n_pairs": 128225,
+    "pos_rate": 0.24470267108598168,
+    "n_fit": 73664,
+    "n_calib": 54561,
+    "fit": {
+      "loss": 0.070512754400796,
+      "iterations": 28,
+      "converged": true,
+      "n": 73664
+    },
+    "dataset": "mot17",
+    "embedder": "colorhist",
+    "det_source": "public",
+    "config_hash": "d548efe29d"
+  }
+}

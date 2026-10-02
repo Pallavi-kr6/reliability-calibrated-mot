@@ -1,0 +1,56 @@
+{
+  "method": "rca",
+  "dataset": "mot17",
+  "split": "train",
+  "metric": "HOTA",
+  "best_score": 50.43282391250447,
+  "overrides": {
+    "rca": {
+      "accept_thresh": 0.1
+    }
+  },
+  "table": [
+    {
+      "rca.accept_thresh": 0.0,
+      "HOTA": 44.077454959363244,
+      "IDF1": 48.88759727469405,
+      "IDSW": 381
+    },
+    {
+      "rca.accept_thresh": 0.1,
+      "HOTA": 50.43282391250447,
+      "IDF1": 56.95611173135914,
+      "IDSW": 372
+    },
+    {
+      "rca.accept_thresh": 0.2,
+      "HOTA": 50.198987735934374,
+      "IDF1": 56.632138402299475,
+      "IDSW": 403
+    },
+    {
+      "rca.accept_thresh": 0.3,
+      "HOTA": 49.80813737239661,
+      "IDF1": 56.10515918243295,
+      "IDSW": 426
+    },
+    {
+      "rca.accept_thresh": 0.4,
+      "HOTA": 49.63529941990892,
+      "IDF1": 55.76171026331798,
+      "IDSW": 438
+    },
+    {
+      "rca.accept_thresh": 0.5,
+      "HOTA": 49.206734534628154,
+      "IDF1": 55.12134655532359,
+      "IDSW": 475
+    },
+    {
+      "rca.accept_thresh": 0.6,
+      "HOTA": 48.953099854044034,
+      "IDF1": 54.656897433943364,
+      "IDSW": 535
+    }
+  ]
+}

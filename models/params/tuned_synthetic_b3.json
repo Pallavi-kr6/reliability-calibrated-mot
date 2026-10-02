@@ -3,10 +3,10 @@
   "dataset": "synthetic",
   "split": "train",
   "metric": "HOTA",
-  "best_score": 67.65112101923329,
+  "best_score": 70.27605531463612,
   "overrides": {
     "fusion": {
-      "fixed_lambda": 0.35,
+      "fixed_lambda": 0.5,
       "ioa_gate": 0.3
     }
   },
@@ -14,86 +14,86 @@
     {
       "fusion.fixed_lambda": 0.2,
       "fusion.ioa_gate": 0.3,
-      "HOTA": 67.23982077024236,
-      "IDF1": 77.56564800938294,
-      "IDSW": 39
+      "HOTA": 69.87328155374412,
+      "IDF1": 81.06893106893106,
+      "IDSW": 11
     },
     {
       "fusion.fixed_lambda": 0.2,
       "fusion.ioa_gate": 0.5,
-      "HOTA": 67.42032003230935,
-      "IDF1": 77.99413871703028,
-      "IDSW": 60
+      "HOTA": 69.86397143431918,
+      "IDF1": 80.91679123069258,
+      "IDSW": 11
     },
     {
       "fusion.fixed_lambda": 0.2,
       "fusion.ioa_gate": 0.7,
-      "HOTA": 67.08000856837239,
-      "IDF1": 77.3496485290289,
-      "IDSW": 47
+      "HOTA": 70.0596386211718,
+      "IDF1": 81.2453300124533,
+      "IDSW": 10
     },
     {
       "fusion.fixed_lambda": 0.35,
       "fusion.ioa_gate": 0.3,
-      "HOTA": 67.65112101923329,
-      "IDF1": 78.38875512461769,
-      "IDSW": 39
+      "HOTA": 70.16346275984792,
+      "IDF1": 82.28855721393035,
+      "IDSW": 9
     },
     {
       "fusion.fixed_lambda": 0.35,
       "fusion.ioa_gate": 0.5,
-      "HOTA": 66.45889549423771,
-      "IDF1": 76.52411282984531,
-      "IDSW": 58
+      "HOTA": 70.12359810875365,
+      "IDF1": 81.38785625774473,
+      "IDSW": 10
     },
     {
       "fusion.fixed_lambda": 0.35,
       "fusion.ioa_gate": 0.7,
-      "HOTA": 66.27877985822582,
-      "IDF1": 76.55925155925156,
-      "IDSW": 65
+      "HOTA": 67.55345944580334,
+      "IDF1": 77.22428748451053,
+      "IDSW": 12
     },
     {
       "fusion.fixed_lambda": 0.5,
       "fusion.ioa_gate": 0.3,
-      "HOTA": 66.69928964344727,
-      "IDF1": 77.66573417474464,
-      "IDSW": 47
+      "HOTA": 70.27605531463612,
+      "IDF1": 82.48756218905473,
+      "IDSW": 8
     },
     {
       "fusion.fixed_lambda": 0.5,
       "fusion.ioa_gate": 0.5,
-      "HOTA": 65.48212516918579,
-      "IDF1": 75.22744996100857,
-      "IDSW": 58
+      "HOTA": 69.15274654133054,
+      "IDF1": 79.454770755886,
+      "IDSW": 10
     },
     {
       "fusion.fixed_lambda": 0.5,
       "fusion.ioa_gate": 0.7,
-      "HOTA": 61.38403333459013,
-      "IDF1": 69.73359324236517,
-      "IDSW": 85
+      "HOTA": 67.76337217779104,
+      "IDF1": 77.68963807635102,
+      "IDSW": 9
     },
     {
       "fusion.fixed_lambda": 0.65,
       "fusion.ioa_gate": 0.3,
-      "HOTA": 66.42097981093245,
-      "IDF1": 76.98913538481557,
-      "IDSW": 45
+      "HOTA": 69.57151936011121,
+      "IDF1": 80.71659616820105,
+      "IDSW": 10
     },
     {
       "fusion.fixed_lambda": 0.65,
       "fusion.ioa_gate": 0.5,
-      "HOTA": 61.45333430002744,
-      "IDF1": 70.38866502014818,
-      "IDSW": 90
+      "HOTA": 69.70751846358696,
+      "IDF1": 80.85317460317461,
+      "IDSW": 15
     },
     {
       "fusion.fixed_lambda": 0.65,
       "fusion.ioa_gate": 0.7,
-      "HOTA": 60.32355957257468,
-      "IDF1": 69.5076003637781,
-      "IDSW": 111
+      "HOTA": 68.68526735549413,
+      "IDF1": 78.97868120971741,
+      "IDSW": 12
     }
   ]
 }

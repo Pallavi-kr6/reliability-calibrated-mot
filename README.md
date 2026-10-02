@@ -248,11 +248,11 @@ regeneration of all tables/figures (`scripts/reproduce.py`) ✔ · no absolute p
 
 | dataset | method | HOTA | DetA | AssA | IDF1 | MOTA | IDSW | tracker FPS | det source | embedder |
 |---|---|---|---|---|---|---|---|---|---|---|
-| mot17 | b0 | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN |
-| mot17 | b1 | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN |
-| mot17 | b2 | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN |
-| mot17 | b3 | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN |
-| mot17 | rca | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN |
+| mot17 | b0 | 49.1 | 41.4 | 58.6 | 55.8 | 44.0 | 248.0 | 109.4 | public | colorhist |
+| mot17 | b1 | 48.6 | 41.2 | 57.5 | 55.0 | 44.0 | 223.0 | 106.6 | public | colorhist |
+| mot17 | b2 | 48.8 | 41.2 | 58.1 | 55.4 | 44.1 | 219.0 | 103.9 | public | colorhist |
+| mot17 | b3 | 49.3 | 41.3 | 59.0 | 56.2 | 44.0 | 248.0 | 105.9 | public | colorhist |
+| mot17 | rca | 48.7 | 41.3 | 57.7 | 55.2 | 43.9 | 243.0 | 103.5 | public | colorhist |
 | mot20 | b0 | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN |
 | mot20 | b1 | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN |
 | mot20 | b2 | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN |
@@ -269,33 +269,33 @@ regeneration of all tables/figures (`scripts/reproduce.py`) ✔ · no absolute p
 
 | dataset | method | HOTA | DetA | AssA | IDF1 | MOTA | IDSW | tracker FPS | det source | embedder |
 |---|---|---|---|---|---|---|---|---|---|---|
-| synthetic | b0 | 57.1 | 61.5 | 53.3 | 65.9 | 66.4 | 120 | 644.3 | public | colorhist |
-| synthetic | b1 | 55.0 | 61.1 | 49.7 | 62.1 | 65.3 | 129 | 599.4 | public | colorhist |
-| synthetic | b2 | 60.4 | 62.2 | 59.0 | 69.6 | 67.8 | 80 | 635.9 | public | colorhist |
-| synthetic | b3 | 58.8 | 62.3 | 55.7 | 68.1 | 67.1 | 96 | 665.5 | public | colorhist |
-| synthetic | rca | 59.7 | 63.7 | 56.2 | 68.1 | 68.1 | 73 | 655.8 | public | colorhist |
+| synthetic | b0 | 65.1 | 66.1 | 64.3 | 75.6 | 73.2 | 22 | 855.0 | public | colorhist |
+| synthetic | b1 | 67.7 | 65.1 | 70.7 | 79.1 | 73.0 | 18 | 804.4 | public | colorhist |
+| synthetic | b2 | 66.1 | 65.6 | 66.9 | 77.6 | 73.3 | 23 | 635.3 | public | colorhist |
+| synthetic | b3 | 66.0 | 66.2 | 66.0 | 77.7 | 74.1 | 24 | 758.6 | public | colorhist |
+| synthetic | rca | 64.8 | 65.8 | 64.2 | 72.8 | 73.0 | 29 | 811.6 | public | colorhist |
 
 
 #### Synthetic DEMO ablations — `results/demo/ablations.csv`
 
 | variant          |   HOTA |   DetA |   AssA |   IDF1 |   MOTA |   IDSW | dataset   |
 |:-----------------|-------:|-------:|-------:|-------:|-------:|-------:|:----------|
-| rca_full         | 59.739 | 63.735 | 56.212 | 68.145 | 68.08  |     73 | synthetic |
-| rca_const_lambda | 57.291 | 63.708 | 51.722 | 64.807 | 67.922 |     83 | synthetic |
-| rca_occ_only     | 57.596 | 63.746 | 52.25  | 65.085 | 68.027 |     78 | synthetic |
-| rca_margin_only  | 59.48  | 63.86  | 55.629 | 67.951 | 67.795 |     73 | synthetic |
-| rca_occ_margin   | 58.855 | 63.69  | 54.634 | 66.922 | 67.732 |     73 | synthetic |
-| rca_no_gate      | 52.627 | 59.733 | 46.705 | 60.193 | 63.545 |    171 | synthetic |
-| rca_uncalibrated | 60.738 | 63.319 | 58.482 | 69.591 | 68.038 |     71 | synthetic |
-| rca_fixed_update | 59.323 | 63.574 | 55.59  | 67.427 | 68.111 |     72 | synthetic |
+| rca_full         | 64.83  | 65.843 | 64.217 | 72.781 | 73.019 |     29 | synthetic |
+| rca_const_lambda | 63.796 | 65.98  | 62.053 | 71.526 | 73.29  |     31 | synthetic |
+| rca_occ_only     | 64.333 | 65.873 | 63.208 | 72.121 | 73.135 |     31 | synthetic |
+| rca_margin_only  | 64.37  | 65.987 | 63.157 | 72.128 | 73.096 |     30 | synthetic |
+| rca_occ_margin   | 64.919 | 65.939 | 64.297 | 72.847 | 73.096 |     29 | synthetic |
+| rca_no_gate      | 66.329 | 65.146 | 67.87  | 78.582 | 72.323 |     31 | synthetic |
+| rca_uncalibrated | 68.216 | 66.334 | 70.515 | 79.331 | 73.792 |     17 | synthetic |
+| rca_fixed_update | 64.825 | 65.837 | 64.213 | 72.766 | 72.98  |     29 | synthetic |
 
 
 #### Synthetic DEMO calibration — `results/demo/calibration.csv`
 
 | dataset   | variant      |   ECE |   Brier |   NLL |   n_pairs |   pos_rate |
 |:----------|:-------------|------:|--------:|------:|----------:|-----------:|
-| synthetic | uncalibrated | 0.026 |   0.011 | 0.052 |     36547 |      0.194 |
-| synthetic | platt        | 0.003 |   0.009 | 0.036 |     36547 |      0.194 |
+| synthetic | uncalibrated | 0.022 |   0.013 | 0.059 |      7025 |      0.289 |
+| synthetic | platt        | 0.007 |   0.012 | 0.05  |      7025 |      0.289 |
 
 
 #### Synthetic DEMO — S2 disappearance injection (rates) — `results/demo/stress.csv`
@@ -303,11 +303,11 @@ regeneration of all tables/figures (`scripts/reproduce.py`) ✔ · no absolute p
 ```
         reassoc_rate@5f  reassoc_rate@15f  reassoc_rate@30f  reassoc_rate@60f  wrong_id_rate@5f  wrong_id_rate@15f  wrong_id_rate@30f  wrong_id_rate@60f
 method                                                                                                                                                  
-b0                0.970             0.844             0.728             0.111             0.010              0.010              0.074              0.167
-b1                0.861             0.726             0.642             0.111             0.119              0.221              0.321              0.167
-b2                1.000             0.896             0.778             0.111             0.000              0.042              0.049              0.167
-b3                0.960             0.875             0.753             0.167             0.040              0.062              0.123              0.167
-rca               1.000             0.760             0.383             0.000             0.000              0.000              0.000              0.000
+b0                0.944             0.846             0.857               0.0             0.019              0.000              0.000                0.0
+b1                0.963             1.000             0.857               0.0             0.019              0.000              0.000                0.0
+b2                0.963             0.949             0.857               0.0             0.019              0.000              0.048                0.0
+b3                0.944             0.923             0.905               0.0             0.037              0.077              0.095                0.0
+rca               0.981             0.667             0.381               0.0             0.019              0.000              0.000                0.0
 ```
 
 
@@ -315,26 +315,26 @@ rca               1.000             0.760             0.383             0.000   
 
 ```
 bin method  n_windows  kappa  HOTA  AssA  IDF1  IDSW
- Q1     b0        5.0   0.00 73.52 81.20 82.88   1.0
- Q1     b1        5.0   0.00 74.13 82.26 84.07   0.0
- Q1     b2        5.0   0.00 73.52 81.11 82.64   1.0
- Q1     b3        5.0   0.00 74.07 82.09 84.07   1.0
- Q1    rca        5.0   0.00 73.77 81.23 83.13   1.0
- Q2     b0        5.0   0.21 76.66 80.50 89.19   1.0
- Q2     b1        5.0   0.21 76.93 80.83 89.27   1.0
- Q2     b2        5.0   0.21 76.04 79.97 88.30   2.0
- Q2     b3        5.0   0.21 76.86 80.91 89.51   2.0
- Q2    rca        5.0   0.21 76.50 79.90 88.48   3.0
- Q3     b0        5.0   1.52 72.51 77.25 83.15  19.0
- Q3     b1        5.0   1.52 71.47 75.17 81.29  21.0
- Q3     b2        5.0   1.52 73.33 78.13 83.81  14.0
- Q3     b3        5.0   1.52 72.62 76.56 82.71  21.0
- Q3    rca        5.0   1.52 73.67 78.12 83.79  14.0
- Q4     b0        5.0   6.53 60.19 66.99 71.30  62.0
- Q4     b1        5.0   6.53 58.01 62.83 67.43  79.0
- Q4     b2        5.0   6.53 62.51 69.88 74.78  36.0
- Q4     b3        5.0   6.53 60.52 66.27 72.03  45.0
- Q4    rca        5.0   6.53 62.66 69.47 75.15  23.0
+ Q1     b0        3.0   0.00 77.19 85.14 86.23   0.0
+ Q1     b1        3.0   0.00 77.19 85.14 86.23   0.0
+ Q1     b2        3.0   0.00 77.13 85.06 86.23   0.0
+ Q1     b3        3.0   0.00 77.27 85.51 85.91   0.0
+ Q1    rca        3.0   0.00 76.91 84.82 86.10   0.0
+ Q2     b0        2.0   0.11 76.53 79.26 89.36   0.0
+ Q2     b1        2.0   0.11 76.53 79.26 89.36   0.0
+ Q2     b2        2.0   0.11 77.79 79.91 90.84   0.0
+ Q2     b3        2.0   0.11 78.47 79.76 92.01   0.0
+ Q2    rca        2.0   0.11 76.53 79.26 89.36   0.0
+ Q3     b0        2.0   1.07 74.00 77.88 89.07   2.0
+ Q3     b1        2.0   1.07 75.20 80.84 90.36   0.0
+ Q3     b2        2.0   1.07 72.56 76.45 86.81   4.0
+ Q3     b3        2.0   1.07 73.78 77.55 88.86   2.0
+ Q3    rca        2.0   1.07 74.64 79.79 90.02   1.0
+ Q4     b0        2.0   1.60 66.54 73.44 78.37  12.0
+ Q4     b1        2.0   1.60 66.29 73.18 78.19  11.0
+ Q4     b2        2.0   1.60 66.48 73.82 78.41  12.0
+ Q4     b3        2.0   1.60 62.70 65.72 73.32  16.0
+ Q4    rca        2.0   1.60 65.58 71.78 76.28  14.0
 ```
 
 
@@ -342,8 +342,8 @@ bin method  n_windows  kappa  HOTA  AssA  IDF1  IDSW
 
 ```
 method  swap_with_other_id  overlapped  after_gap  other
-    b1                 107          11          5      6
-   rca                  16          31         24      2
+    b1                   9           3          5      1
+   rca                   1          11         11      6
 ```
 
 <!-- RESULTS:END -->
