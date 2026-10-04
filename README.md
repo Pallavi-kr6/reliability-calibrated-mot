@@ -348,28 +348,7 @@ method  swap_with_other_id  overlapped  after_gap  other
     b1                   9           3          5      1
    rca                   1          11         11      6
 ```
-
-<!-- RESULTS:END -->
-
-## 20. Limitations  *(read before trusting any number)*
-
-* **Appearance quality.** Color histograms may carry little pedestrian identity information on real MOT footage; inspect `results/diagnostics/appearance_*.csv` before interpreting RCA gains. RCA cannot create identity signal absent from the embedder.
-
-* **Dataset coverage.** MOT17 val was evaluated with public FRCNN detections and colorhist on CPU for v0.2. MOT20 and DanceTrack were not run in this task; download scripts and optional embedders remain unverified.
-* **Torch backends untested.** `resnet18` and `osnet` embedders were written but not executed in the build environment (no torch there); only `colorhist` was run.
-* **Synthetic demo ≠ evidence.** It is a smoke test; relative rankings there need not transfer. Read it for mechanisms (e.g. wrong-ID vs fragmentation), not for headline numbers.
-* **Oracle-label shift.** RCA is fitted on pairs from *oracle* tracks (clean prototypes, never wrong); online tracks drift and get contaminated, so the model can be over-trusting. A tracker-in-the-loop relabelling round is not implemented.
-* **Long-gap prior.** RCA supports `far_per_gap` thresholds estimated from held-out calibration negatives; bins with fewer than 20 positive or negative pairs fall back to global tau. Per-gap Platt scaling is optional and does not by itself change the acceptance threshold.
-* **Related work.** Closest prior art: Deep OC-SORT / Deep LG-Track / AFMA-Track (heuristic adaptive weighting), FC-Track (hard IoA gating), TDLP (learned, heavier association), ProbFlow-Net (probabilistic, multi-module). My claim is only the margin + calibrated-gate combination, and only that I did not find it.
-* The baselines are re-implementations with the same skeleton, not the official repositories; absolute numbers will differ from published ones.
-* Tracker timing excludes detector and embedding extraction.
-
-## 21. Privacy considerations
-
-Track IDs are anonymous, session-local integers. No faces or biometric identity are used; embeddings are colour/appearance
-descriptors held only in the local cache and in track state, and a track's prototype is discarded when the track is removed.
-This mirrors, as an *engineering inference*, Zed Digital's public emphasis on validating ticket status rather than personal identity — it is not a stated Zed requirement.
-If deployed on real footage, observe local law on video analytics and retention.
+  
 
 ## 22. References
 
