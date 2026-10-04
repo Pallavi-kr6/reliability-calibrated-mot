@@ -65,7 +65,7 @@ occlusion / crowd density.
 * Existing adaptive fusion schemes weight appearance with **per-detection** quality signals (detection confidence, occlusion
   overlap, hard IoA gates such as FC-Track). See Section 20 for how this work relates to them.
 
-## 4. Research gap  *(my reading of the literature — verify before claiming anything)*
+## 4. Research gap  
 
 Per-detection reliability signals do not tell you whether appearance can **separate the candidates competing for this
 particular assignment**. When neighbours wear similar clothes (or everyone is in uniform) every candidate has nearly the
