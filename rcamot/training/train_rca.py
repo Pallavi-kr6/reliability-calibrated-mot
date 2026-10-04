@@ -6,7 +6,7 @@ from typing import Dict, Tuple
 import numpy as np
 
 from ..inference.pipeline import get_detsets
-from ..models.rca import PARAM_NAMES, RCAModel, calibration_metrics, fit_platt, fit_rca, free_mask
+from ..models.rca import GAP_BINS, PARAM_NAMES, RCAModel, calibration_metrics, fit_gap_thresholds, fit_platt, fit_rca, free_mask, gap_bin_mask
 from ..utils import config_hash, get_logger, save_json, set_seed
 from .mine_pairs import concat_pairs, mine_pairs
 
@@ -37,12 +37,34 @@ def train_rca(cfg: Dict) -> Tuple[RCAModel, Dict]:
         fit_sel = cal_sel = np.ones(len(y), bool)
     free = free_mask(r["use_occ"], r["use_margin"], r["use_score"])
     sub = lambda sel: {k: pairs[k][sel] for k in ("iou", "ctr", "tsu", "d", "occ", "margin", "score")}
-    theta, info = fit_rca(sub(fit_sel), y[fit_sel], free, r["l2"])
+    fit_x = sub(fit_sel)
+    d0_mode = r.get("d0_mode", "fixed_median")
+    if d0_mode not in ("fixed_median", "free_bounded"):
+        raise ValueError("rca.d0_mode must be 'fixed_median' or 'free_bounded'")
+    if r.get("gate_mode", "global") not in ("global", "far_per_gap"):
+        raise ValueError("rca.gate_mode must be 'global' or 'far_per_gap'")
+    fixed = {"d0": float(np.median(fit_x["d"][y[fit_sel] == 1]))} if d0_mode == "fixed_median" else None
+    theta, info = fit_rca(fit_x, y[fit_sel], free, r["l2"], fixed=fixed)
     model = RCAModel(theta, switches={"use_occ": r["use_occ"], "use_margin": r["use_margin"], "use_score": r["use_score"]})
+    model.d0_mode = d0_mode
     z_cal = model.logit(sub(cal_sel))
     model.platt_a, model.platt_b = fit_platt(z_cal, y[cal_sel])
+    cal_frames = np.exp(pairs["tsu"][cal_sel])
+    model.platt_bins = {}
+    if r.get("platt_per_gap", False):
+        for key, _, _ in GAP_BINS:
+            mask = gap_bin_mask(cal_frames, key)
+            if (mask & (y[cal_sel] == 1)).sum() >= 20 and (mask & (y[cal_sel] == 0)).sum() >= 20:
+                model.platt_bins[key] = fit_platt(z_cal[mask], y[cal_sel][mask])
+    p_cal = model.posterior(sub(cal_sel), calibrated=True)
+    model.tau_bins = {}
+    if r.get("gate_mode", "global") == "far_per_gap":
+        alpha = float(r.get("target_far", 0.02))
+        fallback = float(r.get("accept_thresh", 0.5))
+        model.tau_bins = fit_gap_thresholds(p_cal, y[cal_sel], cal_frames, alpha, fallback)
     model.meta = {"n_pairs": int(len(y)), "pos_rate": float(y.mean()), "n_fit": int(fit_sel.sum()), "n_calib": int(cal_sel.sum()),
                   "fit": info, "dataset": cfg["data"]["dataset"], "embedder": cfg["data"]["embedder"],
+                  "d0_mode": d0_mode, "tau_bins": model.tau_bins,
                   "det_source": cfg["data"]["det_source"], "config_hash": config_hash({"t": cfg["tracker"], "g": cfg["gate"], "r": r})}
     path = model.save(r["model_path"])
     log.info(f"[train] {len(y)} pairs (pos rate {y.mean():.3f}); params = " +

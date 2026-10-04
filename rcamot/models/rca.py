@@ -44,6 +44,9 @@ class RCAModel:
     platt_b: float = 0.0
     switches: Dict[str, bool] = field(default_factory=lambda: {"use_occ": True, "use_margin": True, "use_score": True})
     meta: Dict = field(default_factory=dict)
+    d0_mode: str = "free_bounded"
+    tau_bins: Dict[str, float] = field(default_factory=dict)
+    platt_bins: Dict[str, Tuple[float, float]] = field(default_factory=dict)
 
     # ----- forward -----
     def _p(self, name: str) -> float:
@@ -61,12 +64,28 @@ class RCAModel:
 
     def posterior(self, f: Dict[str, np.ndarray], calibrated: bool = True) -> np.ndarray:
         z = self.logit(f)
-        return expit(self.platt_a * z + self.platt_b) if calibrated else expit(z)
+        p = expit(self.platt_a * z + self.platt_b) if calibrated else expit(z)
+        if calibrated and self.platt_bins:
+            p = np.asarray(p).copy()
+            frames = np.exp(np.asarray(f["tsu"]))
+            for key, (a, b) in self.platt_bins.items():
+                mask = gap_bin_mask(frames, key)
+                p[mask] = expit(a * z[mask] + b)
+        return p
+
+    def threshold(self, f: Dict[str, np.ndarray], default: float) -> np.ndarray:
+        frames = np.exp(np.asarray(f["tsu"]))
+        out = np.full(frames.shape, float(default), dtype=np.float64)
+        for key, tau in self.tau_bins.items():
+            out[gap_bin_mask(frames, key)] = float(tau)
+        return out
 
     # ----- persistence -----
     def to_dict(self) -> Dict:
         return {"param_names": PARAM_NAMES, "params": [float(x) for x in self.params],
-                "platt_a": self.platt_a, "platt_b": self.platt_b, "switches": self.switches, "meta": self.meta}
+                "platt_a": self.platt_a, "platt_b": self.platt_b, "switches": self.switches, "meta": self.meta,
+                "d0_mode": self.d0_mode, "tau_bins": self.tau_bins,
+                "platt_bins": {k: list(v) for k, v in self.platt_bins.items()}}
 
     def save(self, path) -> Path:
         p = resolve_path(path)
@@ -83,20 +102,54 @@ class RCAModel:
         with open(p, "r", encoding="utf-8") as f:
             d = json.load(f)
         return RCAModel(np.array(d["params"], dtype=np.float64), d.get("platt_a", 1.0), d.get("platt_b", 0.0),
-                        d.get("switches", {}), d.get("meta", {}))
+                        d.get("switches", {}), d.get("meta", {}), d.get("d0_mode", "free_bounded"),
+                        d.get("tau_bins", {}), {k: tuple(v) for k, v in d.get("platt_bins", {}).items()})
+
+
+GAP_BINS = (("1", 1, 1), ("2-5", 2, 5), ("6-15", 6, 15), ("16+", 16, np.inf))
+
+
+def gap_bin_mask(frames, key: str):
+    # `tsu` is stored as log(frame_count); round away exp(log(n)) floating-point drift at cut points.
+    values = np.rint(np.asarray(frames)).astype(np.int64)
+    for name, lo, hi in GAP_BINS:
+        if name == key:
+            return (values >= lo) & (values <= hi)
+    return np.zeros(values.shape, dtype=bool)
+
+
+def fit_gap_thresholds(posteriors, labels, frames, alpha: float, fallback: float,
+                       min_each_class: int = 20) -> Dict[str, float]:
+    """Per-gap negative-posterior quantiles; sparse bins use the configured global threshold."""
+    p, y, fr = np.asarray(posteriors), np.asarray(labels).astype(bool), np.asarray(frames)
+    result = {}
+    for key, _, _ in GAP_BINS:
+        mask = gap_bin_mask(fr, key)
+        pos, neg = mask & y, mask & ~y
+        result[key] = (float(np.quantile(p[neg], 1.0 - alpha, method="higher"))
+                       if pos.sum() >= min_each_class and neg.sum() >= min_each_class else float(fallback))
+    return result
 
 
 # ----- fitting -----
 def fit_rca(X: Dict[str, np.ndarray], y: np.ndarray, free: Optional[np.ndarray] = None, l2: float = 1e-3,
-            init: Optional[np.ndarray] = None, max_iter: int = 300) -> Tuple[np.ndarray, Dict]:
+            init: Optional[np.ndarray] = None, max_iter: int = 300,
+            fixed: Optional[Dict[str, float]] = None) -> Tuple[np.ndarray, Dict]:
     """Weighted-free logistic regression with analytic gradients (L-BFGS-B)."""
     free = free_mask() if free is None else np.asarray(free, dtype=bool)
     theta0 = (INIT if init is None else np.asarray(init)).copy()
+    fixed = dict(fixed or {})
+    for name, value in fixed.items():
+        if name not in PARAM_NAMES:
+            raise ValueError(f"Unknown fixed RCA parameter: {name}")
+        theta0[PARAM_NAMES.index(name)] = float(value)
     theta0[~free] = 0.0  # masked gamma parameters are pinned to zero
+    optimize = free.copy()
+    optimize[[PARAM_NAMES.index(k) for k in fixed]] = False
     y = np.asarray(y, dtype=np.float64)
     n = max(len(y), 1)
     iou, ctr, tsu, d, occ, mar, sc = (X[k] for k in ("iou", "ctr", "tsu", "d", "occ", "margin", "score"))
-    idx = np.where(free)[0]
+    idx = np.where(optimize)[0]
 
     def unpack(t):
         full = theta0.copy()

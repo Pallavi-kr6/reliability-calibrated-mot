@@ -12,7 +12,7 @@ import pandas as pd
 from .datasets.registry import DatasetMissingError
 from .evaluation.metrics import METRIC_KEYS
 from .evaluation.runner import METHOD_CONFIGS, method_cfg, read_predictions, run_dir, run_experiment
-from .evaluation.stress import add_bins, s1_tables, s1_windows, s2_table
+from .evaluation.stress import add_bins, choose_s1_window, matched_far_table, offset_tau_bins, s1_tables, s1_windows, s2_table
 from .inference.pipeline import ensure_model, get_detsets, run_tracker
 from .models.rca import RCAModel
 from .utils import deep_update, device_info, ensure_dir, get_logger, load_config, resolve_path, save_json, set_seed
@@ -47,7 +47,8 @@ def cmd_prepare(cfg: Dict, quick: bool = False, regen: bool = False) -> None:
         return
     from .datasets.registry import list_sequences
     for split in ("train", "val"):
-        specs = list_sequences(ds, split, cfg["data"]["root"], cfg["data"].get("mot17_detector", "FRCNN"))
+        specs = list_sequences(ds, split, cfg["data"]["root"], cfg["data"].get("mot17_detector", "FRCNN"),
+                               cfg["data"].get("only_sequences"))
         log.info(f"{ds}/{split}: {len(specs)} sequences, {sum(s.frame_end - s.frame_start + 1 for s in specs)} frames")
         for s in specs:
             log.info(f"  {s.name}: frames {s.frame_start}-{s.frame_end}  gt={'ok' if s.gt_path.exists() else 'MISSING'}  "
@@ -147,13 +148,20 @@ def cmd_tune(dataset: str, overrides: Dict, methods: Optional[List[str]] = None)
         best, table = None, []
         for combo in itertools.product(*[grid[k] for k in keys]):
             c = deep_update(base, dotted_to_nested(dict(zip(keys, combo))))
-            r = run_experiment(c, split, dss, model, write=False)["combined"]
+            candidate_model = model
+            if m == "rca" and "rca.target_far" in keys:
+                from .training.train_rca import train_rca
+                candidate_model, _ = train_rca(c)
+            r = run_experiment(c, split, dss, candidate_model, write=False)["combined"]
             score = r[base["tune"]["metric"]]
             table.append({**dict(zip(keys, combo)), base["tune"]["metric"]: score, "IDF1": r["IDF1"], "IDSW": r["IDSW"]})
             if best is None or score > best[0]:
                 best = (score, dict(zip(keys, combo)))
         save_json({"method": m, "dataset": dataset, "split": split, "metric": base["tune"]["metric"], "best_score": best[0],
                    "overrides": dotted_to_nested(best[1]), "table": table}, tuned_path(dataset, m))
+        if m == "rca" and "rca.target_far" in keys:
+            from .training.train_rca import train_rca
+            train_rca(deep_update(base, dotted_to_nested(best[1])))
         log.info(f"[tune] {m}: best on {split} {base['tune']['metric']} = {best[0]:.2f} with {best[1]}  ({len(table)} configs)")
         out[m] = best
     return out
@@ -173,7 +181,13 @@ def cmd_stress(cfg: Dict, skip_s2: bool = False) -> None:
     ov = {"data": cfg["data"], "seed": cfg["seed"], "results_dir": cfg["results_dir"], "cache_dir": cfg["cache_dir"]}
     cfgs, results, dss, models = run_all(cfg["data"]["dataset"], ov, methods)
     preds = {m: results[m]["_preds"] for m in methods}
-    df = add_bins(s1_windows(preds, dss, S["window"], cfg["eval"]["iou_thr"]), S["n_bins"])
+    s1_window, s1_enough = choose_s1_window(dss, S["window"], S["n_bins"], S.get("min_windows_per_bin", 10))
+    if s1_window != S["window"]:
+        log.warning(f"S1 window reduced from {S['window']} to {s1_window} frames to target {S.get('min_windows_per_bin', 10)} windows per bin.")
+    if not s1_enough:
+        log.warning("S1 remains sparse at the 40-frame minimum; all bins will be marked unreliable.")
+    df = add_bins(s1_windows(preds, dss, s1_window, cfg["eval"]["iou_thr"]), S["n_bins"])
+    df.attrs["min_windows_per_bin"] = S.get("min_windows_per_bin", 10) if s1_enough else 10 ** 9
     target = "rca" if "rca" in methods else methods[-1]
     agg, diff = s1_tables(df, S["reference"], target, S["n_boot"], cfg["seed"])
     out = Path(cfg["results_dir"])
@@ -188,9 +202,20 @@ def cmd_stress(cfg: Dict, skip_s2: bool = False) -> None:
         from .visualization.plots import plot_s2, plot_s2_curve
         plot_s2(s2, fig_dir(cfg) / "s2_gap_injection.png")
         if "rca" in cfgs and S.get("tau_sweep"):
-            curve_cfgs = {f"rca_tau={t}": deep_update(cfgs["rca"], {"rca": {"accept_thresh": t}}) for t in S["tau_sweep"]}
-            curve = s2_table(curve_cfgs, {k: models["rca"] for k in curve_cfgs}, dss, S["gap_lengths"], S["n_gaps"], S["gap_seeds"])
+            # Sweep a common additive offset over the learned per-gap thresholds, preserving the
+            # proposed gate shape while moving along its re-association / wrong-ID operating curve.
+            import copy
+            base_tau = float(cfgs["rca"]["rca"]["accept_thresh"])
+            curve_cfgs, curve_models = {}, {}
+            for tau in S["tau_sweep"]:
+                key = f"rca_tau={tau}"
+                curve_cfgs[key] = deep_update(cfgs["rca"], {"rca": {"accept_thresh": tau, "gate_mode": "far_per_gap"}})
+                curve_models[key] = copy.deepcopy(models["rca"])
+                curve_models[key].tau_bins = offset_tau_bins(models["rca"].tau_bins, tau - base_tau)
+            curve = s2_table(curve_cfgs, curve_models, dss, S["gap_lengths"], S["n_gaps"], S["gap_seeds"])
             parts.append(curve.assign(table="S2_operating_curve"))
+            matched = matched_far_table(s2[s2.method != "rca"], curve)
+            parts.append(matched.assign(table="S2_matched_far"))
             plot_s2_curve(s2, curve, fig_dir(cfg) / "s2_operating_curve.png")
     pd.concat(parts, ignore_index=True).to_csv(resolve_path(out / "stress.csv"), index=False)
     from .visualization.plots import plot_s1

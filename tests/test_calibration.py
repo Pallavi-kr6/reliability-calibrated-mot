@@ -1,6 +1,6 @@
 import numpy as np
 
-from rcamot.models.rca import (PARAM_NAMES, RCAModel, calibration_metrics, fit_platt, fit_rca, free_mask, softplus)
+from rcamot.models.rca import (PARAM_NAMES, RCAModel, calibration_metrics, fit_gap_thresholds, fit_platt, fit_rca, free_mask, gap_bin_mask, softplus)
 from scipy.special import expit
 
 
@@ -53,6 +53,43 @@ def test_model_save_load_roundtrip(tmp_path):
     p = m.save(tmp_path / "m.json")
     m2 = RCAModel.load(p)
     assert np.allclose(m.params, m2.params) and m2.platt_a == 1.3
+
+
+def test_fixed_d0_is_not_optimized():
+    X, y = make(1200, 4)
+    value = 0.123
+    theta, _ = fit_rca(X, y, fixed={"d0": value})
+    assert theta[PARAM_NAMES.index("d0")] == value
+
+
+def test_legacy_model_json_loads_without_new_fields(tmp_path):
+    import json
+    legacy = {"params": [float(x) for x in np.zeros(len(PARAM_NAMES))], "platt_a": 1.2, "platt_b": -0.1}
+    p = tmp_path / "legacy.json"
+    p.write_text(json.dumps(legacy))
+    loaded = RCAModel.load(p)
+    assert loaded.platt_a == 1.2 and loaded.tau_bins == {} and loaded.d0_mode == "free_bounded"
+
+
+def test_gap_threshold_quantile_and_sparse_fallback():
+    # The first bin has 20 negatives and 20 positives; the second is intentionally sparse.
+    neg = np.linspace(0.1, 0.9, 20)
+    p = np.r_[neg, np.full(20, 0.95), np.linspace(0.1, 1.0, 10)]
+    y = np.r_[np.zeros(20), np.ones(20), np.r_[np.zeros(5), np.ones(5)]]
+    frames = np.r_[np.ones(40), np.full(10, 2)]
+    tau = fit_gap_thresholds(p, y, frames, alpha=0.1, fallback=0.37)
+    assert tau["1"] == np.quantile(neg, 0.9, method="higher")
+    assert tau["2-5"] == 0.37  # fewer than 20 examples in each class
+    assert gap_bin_mask(np.array([np.exp(np.log(16.0))]), "16+")[0]
+
+
+def test_per_gap_platt_uses_gap_specific_transform():
+    m = RCAModel()
+    m.platt_bins = {"1": (2.0, 0.0)}
+    f = {"iou": np.zeros(2), "ctr": np.zeros(2), "tsu": np.array([0.0, np.log(2.0)]),
+         "d": np.ones(2) * 0.5, "occ": np.zeros(2), "margin": np.zeros(2), "score": np.zeros(2)}
+    p = m.posterior(f)
+    assert p[0] != p[1]
 
 
 def test_missing_model_gives_helpful_error(tmp_path):

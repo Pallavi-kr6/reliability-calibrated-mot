@@ -19,6 +19,7 @@ def common(p: argparse.ArgumentParser, default_cfg: str = "configs/rca.yaml") ->
     p.add_argument("--embedder", choices=["colorhist", "resnet18", "osnet"], help="override data.embedder")
     p.add_argument("--det-source", choices=["public", "oracle", "file"], help="override data.det_source")
     p.add_argument("--seed", type=int, help="override seed")
+    p.add_argument("--only", nargs="+", metavar="SEQ", help="restrict data to the named sequence(s)")
     p.add_argument("--device", choices=["auto", "cpu", "cuda"], help="embedding device")
     p.add_argument("--set", dest="sets", action="append", default=[], metavar="KEY=VAL",
                    help="generic override, e.g. --set tracker.max_age=40 (repeatable)")
@@ -34,6 +35,8 @@ def build_cfg(a):
         ov["seed"] = a.seed
     if a.device:
         ov["device"] = a.device
+    if a.only:
+        ov.setdefault("data", {})["only_sequences"] = a.only
     return load_config(a.config, dataset=a.dataset, overrides=ov), ov
 
 

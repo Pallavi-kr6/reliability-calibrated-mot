@@ -58,5 +58,6 @@ def rca_cost(f: PairFeatures, model, cfg: Dict) -> Tuple[np.ndarray, np.ndarray,
     feats = f.as_dict()
     post = model.posterior(feats, calibrated=cfg.get("calibrate", True))
     cost = -np.log(np.clip(post, 1e-9, 1.0))
-    valid = f.mask & (post >= cfg["accept_thresh"])
+    threshold = model.threshold(feats, cfg["accept_thresh"]) if cfg.get("gate_mode", "global") == "far_per_gap" else cfg["accept_thresh"]
+    valid = f.mask & (post >= threshold)
     return cost, valid, {"post": post, "lam": model.lam(feats)}

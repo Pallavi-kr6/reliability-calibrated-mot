@@ -62,6 +62,11 @@ rca:
   use_margin: true
   use_score: true
   fit_block: 100           # frames per block; even blocks -> fit, odd blocks -> Platt calibration
+  d0_mode: fixed_median    # fixed_median (positive fit-pair median) | free_bounded (legacy fit)
+  gate_mode: far_per_gap   # global (legacy) | far_per_gap (negative calibration quantile)
+  target_far: 0.02         # target candidate false-accept rate for far_per_gap bins
+  platt_per_gap: false     # optionally fit separate Platt transforms per gap bin
+  relabel_rounds: 0        # reserved for online tracker relabelling; 0 keeps oracle-pair training
 
 eval:
   backend: own             # own | trackeval
@@ -77,6 +82,8 @@ stress:
   n_gaps: 8
   gap_seeds: [0, 1, 2]
   tau_sweep: [0.0, 0.05, 0.1, 0.2, 0.3, 0.5]   # RCA operating curve (S2)
+  s2_max_age: 90           # keep tracks long enough to measure 60-frame disappearance gaps
+  min_windows_per_bin: 10  # S1 halves window size down to 40 frames if bins are sparse
 
 tune:                      # hyper-parameter selection on the TRAIN split (never on the evaluation split)
   metric: HOTA
@@ -86,4 +93,4 @@ tune:                      # hyper-parameter selection on the TRAIN split (never
     b1:  {fusion.fixed_lambda: [0.2, 0.35, 0.5, 0.65], fusion.app_gate: [0.4, 0.6]}
     b2:  {fusion.fixed_lambda: [0.2, 0.35, 0.5, 0.65], fusion.app_gate: [0.4, 0.6]}
     b3:  {fusion.fixed_lambda: [0.2, 0.35, 0.5, 0.65], fusion.ioa_gate: [0.3, 0.5, 0.7]}
-    rca: {rca.accept_thresh: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6]}
+    rca: {rca.accept_thresh: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6], rca.target_far: [0.005, 0.01, 0.02, 0.05]}

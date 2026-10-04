@@ -121,6 +121,7 @@ def test_mot17_shaped_tree_half_split_and_tracking(tmp_path):
     tr = list_sequences("mot17", "train", root)
     va = list_sequences("mot17", "val", root)
     assert len(tr) == len(va) == 7
+    assert [s.name for s in list_sequences("mot17", "val", root, only=["MOT17-04-FRCNN"])] == ["MOT17-04-FRCNN"]
     assert (tr[0].frame_start, tr[0].frame_end) == (1, 12) and (va[0].frame_start, va[0].frame_end) == (13, 24)
     ov = {"data": {"root": str(root), "embedder": "colorhist"}, "cache_dir": str(tmp_path / "cache"),
           "results_dir": str(tmp_path / "res"), "_no_tuned": True}

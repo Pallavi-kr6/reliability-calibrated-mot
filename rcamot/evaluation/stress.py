@@ -86,7 +86,52 @@ def s1_tables(df: pd.DataFrame, reference: str, target: str, n_boot: int, seed: 
             for m in ("HOTA", "AssA", "IDF1", "IDSW"):
                 ci = paired_bootstrap((a.loc[idx, m] - r.loc[idx, m]).to_numpy(), n_boot, seed)
                 diffs.append({"bin": b, "metric": m, "comparison": f"{target}-{reference}", **ci})
+    minimum = int(df.attrs.get("min_windows_per_bin", 10))
+    agg["reliable"] = agg["n_windows"] >= minimum
+    if len(diffs):
+        reliability = agg[agg.method == target].set_index("bin")["reliable"]
+        for row in diffs:
+            row["reliable"] = bool(reliability.get(row["bin"], False))
     return agg, pd.DataFrame(diffs)
+
+
+def choose_s1_window(detsets: List[DetSet], window: int, n_bins: int, minimum: int) -> Tuple[int, bool]:
+    """Halve S1 windows until there are enough candidate windows per crowding bin, or reach 40 frames."""
+    current = int(window)
+    while True:
+        count = 0
+        for ds in detsets:
+            gt = gt_eval_rows(ds.spec)
+            for w0 in range(ds.spec.frame_start, ds.spec.frame_end + 1, current):
+                w1 = min(w0 + current - 1, ds.spec.frame_end)
+                if w1 - w0 + 1 >= current // 2 and window_stats(gt, w0, w1)["density"] > 0:
+                    count += 1
+        enough = count / max(n_bins, 1) >= minimum
+        if enough or current <= 40:
+            return current, enough
+        current = max(40, current // 2)
+
+
+def matched_far_table(baseline: pd.DataFrame, curve: pd.DataFrame) -> pd.DataFrame:
+    """Interpolate the RCA tau sweep at each baseline false-accept rate; out-of-range points are NaN."""
+    rows = []
+    if baseline.empty or curve.empty:
+        return pd.DataFrame(rows)
+    for b in baseline.itertuples():
+        c = curve[curve.gap_frames == b.gap_frames].sort_values("wrong_id_rate")
+        x = c["wrong_id_rate"].to_numpy(float)
+        y = c["reassoc_rate"].to_numpy(float)
+        matched = float(np.interp(b.wrong_id_rate, x, y)) if len(x) and x[0] <= b.wrong_id_rate <= x[-1] else float("nan")
+        rows.append({"baseline": b.method, "gap_frames": b.gap_frames, "baseline_wrong_id_rate": b.wrong_id_rate,
+                     "baseline_reassoc_rate": b.reassoc_rate, "rca_reassoc_at_matched_far": matched,
+                     "delta_reassoc": matched - b.reassoc_rate if np.isfinite(matched) else float("nan"),
+                     "n_gaps": b.n_gaps})
+    return pd.DataFrame(rows)
+
+
+def offset_tau_bins(tau_bins: Dict[str, float], offset: float) -> Dict[str, float]:
+    """Shift every learned per-gap threshold equally for a shape-preserving operating curve."""
+    return {key: float(np.clip(value + offset, 0.0, 1.0)) for key, value in tau_bins.items()}
 
 
 # ---------------------------------------------------------------- S2: disappearance injection
@@ -124,7 +169,9 @@ def gap_injection(cfg: Dict, ds: DetSet, model, k: int, n_gaps: int, seed: int) 
     drop = np.zeros(len(ds.frames), bool)
     for g, t0 in gaps:
         drop |= (ds.gt_id == g) & (ds.frames >= t0) & (ds.frames < t0 + k)
-    rows, _ = run_tracker(ds.drop(drop), cfg, model)
+    from ..utils import deep_update
+    s2_cfg = deep_update(cfg, {"tracker": {"max_age": int(cfg.get("stress", {}).get("s2_max_age", 90))}})
+    rows, _ = run_tracker(ds.drop(drop), s2_cfg, model)
     gt = _ped(gt_eval_rows(ds.spec))
     pf = {int(f): rows[rows[:, 0] == f] for f in np.unique(rows[:, 0])} if len(rows) else {}
     gf = {int(f): gt[gt[:, 0] == f] for f in np.unique(gt[:, 0])}
@@ -183,7 +230,7 @@ def s2_table(cfg_by_method: Dict[str, Dict], models: Dict, detsets: List[DetSet]
                     for kk in tot:
                         tot[kk] += c[kk]
             n = max(tot["n_gaps"], 1)
-            rows.append({"method": m, "gap_frames": k, **tot, "reassoc_rate": tot["success"] / n,
+            rows.append({"method": m, "gap_frames": k, "s2_max_age": int(cfg.get("stress", {}).get("s2_max_age", 90)), **tot, "reassoc_rate": tot["success"] / n,
                          "wrong_id_rate": tot["wrong_id"] / n, "new_id_rate": tot["new_id"] / n, "lost_rate": tot["lost"] / n})
             log.info(f"[S2] {m} k={k}: n={tot['n_gaps']} success={tot['success']} wrong={tot['wrong_id']} new={tot['new_id']} lost={tot['lost']}")
     return pd.DataFrame(rows)

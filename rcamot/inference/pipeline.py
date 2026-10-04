@@ -17,7 +17,8 @@ log = get_logger()
 
 def get_specs(cfg: Dict, split: str, only: Optional[List[str]] = None) -> List[SequenceSpec]:
     d = cfg["data"]
-    return list_sequences(d["dataset"], split, d["root"], d.get("mot17_detector", "FRCNN"), only)
+    return list_sequences(d["dataset"], split, d["root"], d.get("mot17_detector", "FRCNN"),
+                          only if only is not None else d.get("only_sequences"))
 
 
 def get_detsets(cfg: Dict, split: str, force: bool = False, only: Optional[List[str]] = None) -> List[DetSet]:

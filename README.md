@@ -208,17 +208,20 @@ Cache layout: `data/cache/<dataset>/<seq>/<det_source>__<embedder>__f<start>-<en
 ## 15. Ablations
 
 `python main.py ablation --dataset X` (`configs/ablation.yaml`): full RCA; constant λ (no reliability features); occlusion only;
-margin only; occlusion+margin; no accept gate; uncalibrated; fixed EMA update. Every row is a single flip; feature ablations are re-fitted.
+margin only; occlusion+margin; no accept gate; uncalibrated; fixed EMA update; `free_bounded` d0; global vs far-per-gap gate;
+and optional per-gap Platt scaling. Feature/model ablations are re-fitted where needed.
 → `results/ablations.csv`, `figures/ablation.png`. *Note:* `uncalibrated` reuses the τ tuned for the calibrated model; thresholds are not comparable across calibrations.
 
 ## 16. Stress testing
 
 `python main.py stress --dataset X` (`configs/stress.yaml`)
 * **S1** natural crowding: fixed windows, crowding κ = mean #GT pairs with IoU>0.4 per frame, κ-quantile bins, each window
-  evaluated as a pseudo-sequence, paired bootstrap CIs of RCA − reference over windows (a CI is only flagged significant with ≥10 windows).
+  evaluated as a pseudo-sequence, paired bootstrap CIs of RCA − reference over windows. If bins are sparse, the CLI halves the
+  window size to 40 frames; each bin is marked unreliable if it still has fewer than `stress.min_windows_per_bin` windows.
 * **S2** controlled disappearance: remove one identity's detections for k frames; outcome of the first reappearing detection:
-  *re-associated*, **wrong-ID** (another person's id = identity drift), *new id*, *lost*. The RCA accept threshold is swept
-  to give an operating curve (wrong-ID = "false accept" vs re-association = "true accept"), `figures/s2_operating_curve.png`.
+  *re-associated*, **wrong-ID** (another person's id = identity drift), *new id*, *lost*. S2 uses `stress.s2_max_age`, separate
+  from the main tracker lifetime. The RCA per-gap threshold vector is shifted uniformly for an operating curve (wrong-ID =
+  "false accept" vs re-association = "true accept"); baseline points are interpolated at matched wrong-ID rates.
 → `results/stress.csv`, `results/stress_s1_windows.csv`.
 
 ## 17. Failure analysis
@@ -248,11 +251,11 @@ regeneration of all tables/figures (`scripts/reproduce.py`) ✔ · no absolute p
 
 | dataset | method | HOTA | DetA | AssA | IDF1 | MOTA | IDSW | tracker FPS | det source | embedder |
 |---|---|---|---|---|---|---|---|---|---|---|
-| mot17 | b0 | 49.1 | 41.4 | 58.6 | 55.8 | 44.0 | 248.0 | 109.4 | public | colorhist |
-| mot17 | b1 | 48.6 | 41.2 | 57.5 | 55.0 | 44.0 | 223.0 | 106.6 | public | colorhist |
-| mot17 | b2 | 48.8 | 41.2 | 58.1 | 55.4 | 44.1 | 219.0 | 103.9 | public | colorhist |
-| mot17 | b3 | 49.3 | 41.3 | 59.0 | 56.2 | 44.0 | 248.0 | 105.9 | public | colorhist |
-| mot17 | rca | 48.7 | 41.3 | 57.7 | 55.2 | 43.9 | 243.0 | 103.5 | public | colorhist |
+| mot17 | b0 | 49.1 | 41.4 | 58.6 | 55.8 | 44.0 | 248.0 | 627.8 | public | colorhist |
+| mot17 | b1 | 48.6 | 41.2 | 57.5 | 55.0 | 44.0 | 223.0 | 623.4 | public | colorhist |
+| mot17 | b2 | 48.8 | 41.2 | 58.1 | 55.4 | 44.1 | 219.0 | 594.0 | public | colorhist |
+| mot17 | b3 | 49.3 | 41.3 | 59.0 | 56.2 | 44.0 | 248.0 | 612.0 | public | colorhist |
+| mot17 | rca | 49.1 | 41.3 | 58.7 | 56.0 | 44.0 | 242.0 | 577.5 | public | colorhist |
 | mot20 | b0 | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN |
 | mot20 | b1 | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN |
 | mot20 | b2 | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN | NOT YET RUN |
@@ -350,12 +353,13 @@ method  swap_with_other_id  overlapped  after_gap  other
 
 ## 20. Limitations  *(read before trusting any number)*
 
-* **Not yet run on the real benchmarks.** The build environment had no access to MOTChallenge/DanceTrack, so the MOT17/MOT20/DanceTrack
-  code paths were tested on a MOT17-shaped tree built from rendered scenes, not on the real data. Download URLs in `scripts/` could not be tested from the build sandbox.
+* **Appearance quality.** Color histograms may carry little pedestrian identity information on real MOT footage; inspect `results/diagnostics/appearance_*.csv` before interpreting RCA gains. RCA cannot create identity signal absent from the embedder.
+
+* **Dataset coverage.** MOT17 val was evaluated with public FRCNN detections and colorhist on CPU for v0.2. MOT20 and DanceTrack were not run in this task; download scripts and optional embedders remain unverified.
 * **Torch backends untested.** `resnet18` and `osnet` embedders were written but not executed in the build environment (no torch there); only `colorhist` was run.
 * **Synthetic demo ≠ evidence.** It is a smoke test; relative rankings there need not transfer. Read it for mechanisms (e.g. wrong-ID vs fragmentation), not for headline numbers.
 * **Oracle-label shift.** RCA is fitted on pairs from *oracle* tracks (clean prototypes, never wrong); online tracks drift and get contaminated, so the model can be over-trusting. A tracker-in-the-loop relabelling round is not implemented.
-* **Long-gap prior.** For long disappearances true re-associations are rare in the training pairs, so the calibrated posterior is low and a single threshold τ trades re-association against wrong-ID (see `s2_operating_curve.png`). Gap-aware calibration is future work.
+* **Long-gap prior.** RCA supports `far_per_gap` thresholds estimated from held-out calibration negatives; bins with fewer than 20 positive or negative pairs fall back to global tau. Per-gap Platt scaling is optional and does not by itself change the acceptance threshold.
 * **Related work.** Closest prior art: Deep OC-SORT / Deep LG-Track / AFMA-Track (heuristic adaptive weighting), FC-Track (hard IoA gating), TDLP (learned, heavier association), ProbFlow-Net (probabilistic, multi-module). My claim is only the margin + calibrated-gate combination, and only that I did not find it.
 * The baselines are re-implementations with the same skeleton, not the official repositories; absolute numbers will differ from published ones.
 * Tracker timing excludes detector and embedding extraction.

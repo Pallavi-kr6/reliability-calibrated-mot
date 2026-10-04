@@ -3,54 +3,209 @@
   "dataset": "mot17",
   "split": "train",
   "metric": "HOTA",
-  "best_score": 50.43282391250447,
+  "best_score": 51.4809034169652,
   "overrides": {
     "rca": {
-      "accept_thresh": 0.1
+      "accept_thresh": 0.0,
+      "target_far": 0.02
     }
   },
   "table": [
     {
       "rca.accept_thresh": 0.0,
-      "HOTA": 44.077454959363244,
-      "IDF1": 48.88759727469405,
-      "IDSW": 381
+      "rca.target_far": 0.005,
+      "HOTA": 48.820522305215256,
+      "IDF1": 54.05016357688113,
+      "IDSW": 687
+    },
+    {
+      "rca.accept_thresh": 0.0,
+      "rca.target_far": 0.01,
+      "HOTA": 51.12668064851299,
+      "IDF1": 57.792573956797085,
+      "IDSW": 386
+    },
+    {
+      "rca.accept_thresh": 0.0,
+      "rca.target_far": 0.02,
+      "HOTA": 51.4809034169652,
+      "IDF1": 58.24948281651088,
+      "IDSW": 360
+    },
+    {
+      "rca.accept_thresh": 0.0,
+      "rca.target_far": 0.05,
+      "HOTA": 50.615575633788,
+      "IDF1": 57.71251865147158,
+      "IDSW": 345
     },
     {
       "rca.accept_thresh": 0.1,
-      "HOTA": 50.43282391250447,
-      "IDF1": 56.95611173135914,
-      "IDSW": 372
+      "rca.target_far": 0.005,
+      "HOTA": 48.820522305215256,
+      "IDF1": 54.05016357688113,
+      "IDSW": 687
+    },
+    {
+      "rca.accept_thresh": 0.1,
+      "rca.target_far": 0.01,
+      "HOTA": 51.12668064851299,
+      "IDF1": 57.792573956797085,
+      "IDSW": 386
+    },
+    {
+      "rca.accept_thresh": 0.1,
+      "rca.target_far": 0.02,
+      "HOTA": 51.4809034169652,
+      "IDF1": 58.24948281651088,
+      "IDSW": 360
+    },
+    {
+      "rca.accept_thresh": 0.1,
+      "rca.target_far": 0.05,
+      "HOTA": 50.615575633788,
+      "IDF1": 57.71251865147158,
+      "IDSW": 345
     },
     {
       "rca.accept_thresh": 0.2,
-      "HOTA": 50.198987735934374,
-      "IDF1": 56.632138402299475,
-      "IDSW": 403
+      "rca.target_far": 0.005,
+      "HOTA": 48.820522305215256,
+      "IDF1": 54.05016357688113,
+      "IDSW": 687
+    },
+    {
+      "rca.accept_thresh": 0.2,
+      "rca.target_far": 0.01,
+      "HOTA": 51.12668064851299,
+      "IDF1": 57.792573956797085,
+      "IDSW": 386
+    },
+    {
+      "rca.accept_thresh": 0.2,
+      "rca.target_far": 0.02,
+      "HOTA": 51.4809034169652,
+      "IDF1": 58.24948281651088,
+      "IDSW": 360
+    },
+    {
+      "rca.accept_thresh": 0.2,
+      "rca.target_far": 0.05,
+      "HOTA": 50.615575633788,
+      "IDF1": 57.71251865147158,
+      "IDSW": 345
     },
     {
       "rca.accept_thresh": 0.3,
-      "HOTA": 49.80813737239661,
-      "IDF1": 56.10515918243295,
-      "IDSW": 426
+      "rca.target_far": 0.005,
+      "HOTA": 48.820522305215256,
+      "IDF1": 54.05016357688113,
+      "IDSW": 687
+    },
+    {
+      "rca.accept_thresh": 0.3,
+      "rca.target_far": 0.01,
+      "HOTA": 51.12668064851299,
+      "IDF1": 57.792573956797085,
+      "IDSW": 386
+    },
+    {
+      "rca.accept_thresh": 0.3,
+      "rca.target_far": 0.02,
+      "HOTA": 51.4809034169652,
+      "IDF1": 58.24948281651088,
+      "IDSW": 360
+    },
+    {
+      "rca.accept_thresh": 0.3,
+      "rca.target_far": 0.05,
+      "HOTA": 50.615575633788,
+      "IDF1": 57.71251865147158,
+      "IDSW": 345
     },
     {
       "rca.accept_thresh": 0.4,
-      "HOTA": 49.63529941990892,
-      "IDF1": 55.76171026331798,
-      "IDSW": 438
+      "rca.target_far": 0.005,
+      "HOTA": 48.820522305215256,
+      "IDF1": 54.05016357688113,
+      "IDSW": 687
+    },
+    {
+      "rca.accept_thresh": 0.4,
+      "rca.target_far": 0.01,
+      "HOTA": 51.12668064851299,
+      "IDF1": 57.792573956797085,
+      "IDSW": 386
+    },
+    {
+      "rca.accept_thresh": 0.4,
+      "rca.target_far": 0.02,
+      "HOTA": 51.4809034169652,
+      "IDF1": 58.24948281651088,
+      "IDSW": 360
+    },
+    {
+      "rca.accept_thresh": 0.4,
+      "rca.target_far": 0.05,
+      "HOTA": 50.615575633788,
+      "IDF1": 57.71251865147158,
+      "IDSW": 345
     },
     {
       "rca.accept_thresh": 0.5,
-      "HOTA": 49.206734534628154,
-      "IDF1": 55.12134655532359,
-      "IDSW": 475
+      "rca.target_far": 0.005,
+      "HOTA": 48.820522305215256,
+      "IDF1": 54.05016357688113,
+      "IDSW": 687
+    },
+    {
+      "rca.accept_thresh": 0.5,
+      "rca.target_far": 0.01,
+      "HOTA": 51.12668064851299,
+      "IDF1": 57.792573956797085,
+      "IDSW": 386
+    },
+    {
+      "rca.accept_thresh": 0.5,
+      "rca.target_far": 0.02,
+      "HOTA": 51.4809034169652,
+      "IDF1": 58.24948281651088,
+      "IDSW": 360
+    },
+    {
+      "rca.accept_thresh": 0.5,
+      "rca.target_far": 0.05,
+      "HOTA": 50.615575633788,
+      "IDF1": 57.71251865147158,
+      "IDSW": 345
     },
     {
       "rca.accept_thresh": 0.6,
-      "HOTA": 48.953099854044034,
-      "IDF1": 54.656897433943364,
-      "IDSW": 535
+      "rca.target_far": 0.005,
+      "HOTA": 48.820522305215256,
+      "IDF1": 54.05016357688113,
+      "IDSW": 687
+    },
+    {
+      "rca.accept_thresh": 0.6,
+      "rca.target_far": 0.01,
+      "HOTA": 51.12668064851299,
+      "IDF1": 57.792573956797085,
+      "IDSW": 386
+    },
+    {
+      "rca.accept_thresh": 0.6,
+      "rca.target_far": 0.02,
+      "HOTA": 51.4809034169652,
+      "IDF1": 58.24948281651088,
+      "IDSW": 360
+    },
+    {
+      "rca.accept_thresh": 0.6,
+      "rca.target_far": 0.05,
+      "HOTA": 50.615575633788,
+      "IDF1": 57.71251865147158,
+      "IDSW": 345
     }
   ]
 }

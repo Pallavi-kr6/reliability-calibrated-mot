@@ -9,6 +9,10 @@ ablation:
     - {name: rca_occ_only,       refit: true,  overrides: {rca: {use_occ: true,  use_margin: false, use_score: false}}}
     - {name: rca_margin_only,    refit: true,  overrides: {rca: {use_occ: false, use_margin: true,  use_score: false}}}
     - {name: rca_occ_margin,     refit: true,  overrides: {rca: {use_occ: true,  use_margin: true,  use_score: false}}}
-    - {name: rca_no_gate,        refit: false, overrides: {rca: {accept_thresh: 0.0}}}
+    - {name: rca_no_gate,        refit: false, overrides: {rca: {gate_mode: global, accept_thresh: 0.0}}}
     - {name: rca_uncalibrated,   refit: false, overrides: {rca: {calibrate: false}}}
     - {name: rca_fixed_update,   refit: false, overrides: {tracker: {update_mode: fixed}}}
+    - {name: rca_free_d0,        refit: true,  overrides: {rca: {d0_mode: free_bounded}}}
+    - {name: rca_global_gate,    refit: false, overrides: {rca: {gate_mode: global}}}
+    - {name: rca_far_per_gap,    refit: false, overrides: {rca: {gate_mode: far_per_gap, platt_per_gap: false}}}
+    - {name: rca_far_per_gap_platt_bins, refit: true, overrides: {rca: {gate_mode: far_per_gap, platt_per_gap: true}}}
